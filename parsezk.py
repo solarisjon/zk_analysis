@@ -1,5 +1,7 @@
 import xml.etree.ElementTree as ET
 import pandas as pd
+from icecream import ic
+
 
 def xml_to_dict(node):
     """Convert an XML node and its children to a dictionary."""
@@ -12,9 +14,7 @@ def xml_to_dict(node):
         }
     return result
 
-def start_parse():
-    # Path to the XML file
-    xml_file = "./data/zk_data.xml"
+def start_parse(xml_file):
     
     # Parse the XML file
     tree = ET.parse(xml_file)

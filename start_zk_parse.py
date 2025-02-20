@@ -1,6 +1,9 @@
 import streamlit as st
 from parsezk import start_parse
 import pandas as pd
+from icecream import ic 
+import os
+from initialize import clean_and_recreate_directory
 
 def display_node(node, level=0):
     """Recursively display an XML node and its children."""
@@ -44,17 +47,34 @@ def main():
     
     # Add NetApp logo at the top of the sidebar
     st.sidebar.image("netapp_logo.png", use_container_width=True)
-    
-    # Main window content
-    st.title("SolidFire ZooKeeper Analysis")
-    response_df = start_parse()
-    
-    # Display the DataFrame
-    selected_row = st.selectbox("Select a row to view details", response_df.to_dict('records'), format_func=lambda x: x['name'])
-    
-    if selected_row:
-        st.write("### Detailed XML View")
-        display_node(selected_row)
+
+    uploaded_file = st.sidebar.file_uploader("Upload ZooKeeper zkdata.xml file", type="xml", accept_multiple_files=False)
+    uploads_path = "./uploads"
+    clean_and_recreate_directory(uploads_path)
+
+    ic(uploaded_file)
+
+    if st.button("Start"):
+        if uploaded_file:
+            file_paths = []
+            file_path = os.path.join(uploads_path, uploaded_file.name)
+            ic(file_path)
+            with open(file_path, "wb") as f:
+                f.write(uploaded_file.getbuffer())
+        
+
+            # Main window content
+            st.title("SolidFire ZooKeeper Analysis")
+
+            response_df = start_parse(file_path)
+            
+            # Display the DataFrame
+            selected_row = st.selectbox("Select a row to view details", response_df.to_dict('records'), format_func=lambda x: x['name'])
+
+            
+            if selected_row:
+                st.write("### Detailed XML View")
+                display_node(selected_row)
 
 if __name__ == "__main__":
     main()

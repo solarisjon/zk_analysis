@@ -3,3 +3,4 @@ __pycache__/
 data/
 parsezk.py.1
 top_level_zknodes.csv
+uploads/
