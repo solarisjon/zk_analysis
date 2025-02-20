@@ -1,12 +1,22 @@
+import os
 import streamlit as st
-from parsezk import start_parse
 import pandas as pd
 from icecream import ic 
-import os
+#
+from parsezk import start_parse
 from initialize import clean_and_recreate_directory
 
 def display_node(node, level=0):
-    """Recursively display an XML node and its children."""
+    """
+    Recursively display an XML node and its children using Streamlit.
+    Args:
+        node (dict): A dictionary representing the XML node. It should have 'name', 'value', and 'children' keys.
+        level (int, optional): The current level of indentation for displaying the node. Defaults to 0.
+    Raises:
+        KeyError: If the expected keys ('name', 'value', 'children') are not found in the node dictionary.
+        Exception: For any other exceptions that occur during the display process.
+    """
+   
     try:
         indent = ' ' * (level * 4)
         st.write(f"{indent}**Name**: {node['name']}")
@@ -23,6 +33,22 @@ def display_node(node, level=0):
         st.error(f"An error occurred: {e}")
 
 def main():
+    """
+    Main function to set up and run the ZooKeeper Analysis app.
+    This function performs the following tasks:
+    1. Sets the page configuration including title, icon, and layout.
+    2. Applies a custom color theme and hides the default footer.
+    3. Adds the NetApp logo to the sidebar.
+    4. Provides a file uploader in the sidebar for uploading a ZooKeeper zkdata.xml file.
+    5. Cleans and recreates the uploads directory.
+    6. Displays the uploaded file information.
+    7. On clicking the "Start" button, saves the uploaded file to the uploads directory.
+    8. Parses the uploaded file and displays the analysis results in the main window.
+    9. Allows the user to select a row from the parsed data to view detailed XML information.
+    Note:
+    - The function uses Streamlit for the web interface.
+    - The function assumes the existence of helper functions `clean_and_recreate_directory`, `start_parse`, and `display_node`.
+    """
     # Set the title of the app
     st.set_page_config(page_title="ZooKeeper Analysis", page_icon="netapp_logo.png", layout="wide")
     
